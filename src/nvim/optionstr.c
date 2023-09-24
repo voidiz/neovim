@@ -861,6 +861,12 @@ const char *did_set_selectmode(optset_T *args FUNC_ATTR_UNUSED)
 /// The 'inccommand' option is changed.
 const char *did_set_inccommand(optset_T *args FUNC_ATTR_UNUSED)
 {
+  // Don't allow setting inccommand while command preview is open
+  DLOG("cmdpreview bufnr: %d", cmdpreview_get_bufnr());
+  if (cmdpreview_get_bufnr() != 0) {
+    return N_("E1157: Cannot set 'inccommand' while the command preview window is open");
+  }
+  
   return did_set_opt_strings(p_icm, p_icm_values, false);
 }
 
